@@ -1,0 +1,1317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Exemption Submission - Upload File (KML)">
+      <stringProp name="TestPlan.comments">End-to-end exemption submission via marine-licensing-frontend BFF.
+Full happy path: stub login -&gt; project name -&gt; site details (8 sub-pages) -&gt; public register -&gt; declaration submit -&gt; verify EXE reference.
+Auth: cdp-defra-id-stub (dev or perf-test once stub is deployed there).</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="domain" elementType="Argument">
+            <stringProp name="Argument.name">domain</stringProp>
+            <stringProp name="Argument.value">${__P(domain,marine-licensing-frontend.dev.cdp-int.defra.cloud)}</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">${__P(port,443)}</stringProp>
+          </elementProp>
+          <elementProp name="protocol" elementType="Argument">
+            <stringProp name="Argument.name">protocol</stringProp>
+            <stringProp name="Argument.value">${__P(protocol,https)}</stringProp>
+          </elementProp>
+          <elementProp name="stubDomain" elementType="Argument">
+            <stringProp name="Argument.name">stubDomain</stringProp>
+            <stringProp name="Argument.value">${__P(stubDomain,cdp-defra-id-stub.dev.cdp-int.defra.cloud)}</stringProp>
+          </elementProp>
+          <elementProp name="stubPort" elementType="Argument">
+            <stringProp name="Argument.name">stubPort</stringProp>
+            <stringProp name="Argument.value">${__P(stubPort,443)}</stringProp>
+          </elementProp>
+          <elementProp name="stubProtocol" elementType="Argument">
+            <stringProp name="Argument.name">stubProtocol</stringProp>
+            <stringProp name="Argument.value">${__P(stubProtocol,https)}</stringProp>
+          </elementProp>
+          <elementProp name="proxyHost" elementType="Argument">
+            <stringProp name="Argument.name">proxyHost</stringProp>
+            <stringProp name="Argument.value">${__P(proxyHost,)}</stringProp>
+          </elementProp>
+          <elementProp name="proxyPort" elementType="Argument">
+            <stringProp name="Argument.name">proxyPort</stringProp>
+            <stringProp name="Argument.value">${__P(proxyPort,)}</stringProp>
+          </elementProp>
+          <elementProp name="threads" elementType="Argument">
+            <stringProp name="Argument.name">threads</stringProp>
+            <stringProp name="Argument.value">${__P(threads,3)}</stringProp>
+          </elementProp>
+          <elementProp name="rampSeconds" elementType="Argument">
+            <stringProp name="Argument.name">rampSeconds</stringProp>
+            <stringProp name="Argument.value">${__P(rampSeconds,30)}</stringProp>
+          </elementProp>
+          <elementProp name="loops" elementType="Argument">
+            <stringProp name="Argument.name">loops</stringProp>
+            <stringProp name="Argument.value">${__P(loops,5)}</stringProp>
+          </elementProp>
+          <elementProp name="thinkTimeMs" elementType="Argument">
+            <stringProp name="Argument.name">thinkTimeMs</stringProp>
+            <stringProp name="Argument.value">${__P(thinkTimeMs,500)}</stringProp>
+          </elementProp>
+          <elementProp name="kmlPath" elementType="Argument">
+            <stringProp name="Argument.name">kmlPath</stringProp>
+            <stringProp name="Argument.value">${__P(kmlPath,/opt/perftest/resources/test-site.kml)}</stringProp>
+          </elementProp>
+          <elementProp name="journeyVariant" elementType="Argument">
+            <stringProp name="Argument.name">journeyVariant</stringProp>
+            <stringProp name="Argument.value">${__P(journey,dev)}</stringProp>
+            <stringProp name="Argument.desc">dev (legacy UI: project-name -&gt; how-do-you-want-to-provide directly) or perftest (newer UI: project-name -&gt; task-list hub with review-site-details + cya intermediates). JMX auto-registers Citizen users so /confirm-individual is used in both.</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
+        <stringProp name="HTTPSampler.domain">${domain}</stringProp>
+        <stringProp name="HTTPSampler.port">${port}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+        <stringProp name="HTTPSampler.proxyHost">${proxyHost}</stringProp>
+        <stringProp name="HTTPSampler.proxyPort">${proxyPort}</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout">10000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+        <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Headers">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept-Language</stringProp>
+            <stringProp name="Header.value">en-GB,en;q=0.9</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">User-Agent</stringProp>
+            <stringProp name="Header.value">Mozilla/5.0 (jmeter-perf-test exemption-submission)</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookies">
+        <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <stringProp name="CookieManager.policy">standard</stringProp>
+        <boolProp name="CookieManager.controlledByThreadGroup">true</boolProp>
+      </CookieManager>
+      <hashTree/>
+      <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache">
+        <boolProp name="clearEachIteration">true</boolProp>
+        <boolProp name="useExpires">true</boolProp>
+      </CacheManager>
+      <hashTree/>
+
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Exemption Submission Flow">
+        <stringProp name="ThreadGroup.num_threads">${threads}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${rampSeconds}</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
+          <stringProp name="LoopController.loops">${loops}</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Per-iteration test data">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import java.time.LocalDate
+def runId = UUID.randomUUID().toString().take(8)
+vars.put('runId', runId)
+vars.put('projectName', "Perf Exemption ${runId}")
+def today = LocalDate.now()
+def start = today.plusDays(60)
+def end = today.plusDays(180)
+vars.put('startDay', String.format('%02d', start.getDayOfMonth()))
+vars.put('startMonth', String.format('%02d', start.getMonthValue()))
+vars.put('startYear', String.valueOf(start.getYear()))
+vars.put('endDay', String.format('%02d', end.getDayOfMonth()))
+vars.put('endMonth', String.format('%02d', end.getMonthValue()))
+vars.put('endYear', String.valueOf(end.getYear()))
+</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Login (once per VU)"/>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate per-VU user data">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">def uniq = UUID.randomUUID().toString().take(8)
+vars.put('userEmail', "perf-${uniq}@example.com")
+vars.put('userFirstName', 'Perf')
+vars.put('userLastName', "Test ${uniq}")
+SampleResult.setResponseData("userEmail=${vars.get('userEmail')}", 'UTF-8')
+SampleResult.setResponseMessage('user data set')
+</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-LOGIN">
+            <boolProp name="TransactionController.parent">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST stub register user">
+              <stringProp name="HTTPSampler.domain">${stubDomain}</stringProp>
+              <stringProp name="HTTPSampler.port">${stubPort}</stringProp>
+              <stringProp name="HTTPSampler.protocol">${stubProtocol}</stringProp>
+              <stringProp name="HTTPSampler.path">/cdp-defra-id-stub/API/register</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{"email":"${userEmail}","firstName":"${userFirstName}","lastName":"${userLastName}","loa":"1","aal":"1","enrolmentCount":1,"enrolmentRequestCount":1,"relationships":[]}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="JSON Content-Type">
+                <collectionProp name="HeaderManager.headers">
+                  <elementProp name="" elementType="Header">
+                    <stringProp name="Header.name">Content-Type</stringProp>
+                    <stringProp name="Header.value">application/json</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </HeaderManager>
+              <hashTree/>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="201 Created">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49587">201</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract userId from register response">
+                <stringProp name="JSONPostProcessor.referenceNames">userId</stringProp>
+                <stringProp name="JSONPostProcessor.jsonPathExprs">$.userId</stringProp>
+                <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+                <stringProp name="JSONPostProcessor.defaultValues">NO_USER_ID</stringProp>
+              </JSONPostProcessor>
+              <hashTree/>
+            </hashTree>
+
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption (IAT entry) -> stub picker">
+              <stringProp name="HTTPSampler.path">/exemption?ADV_TYPE=EXE&amp;ARTICLE=17&amp;ACTIVITY_TYPE=DEPOSIT&amp;outcomeType=WO_EXE_AVAILABLE_ARTICLE_17</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract all stub login links">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">allLoginPaths</stringProp>
+                <stringProp name="RegexExtractor.regex">href=&quot;(/cdp-defra-id-stub/authorize[^&quot;]+user=[^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_LOGIN_LINK</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick login link for our email">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def myEmail = vars.get('userEmail')
+def count = (vars.get('allLoginPaths_matchNr') ?: '0') as int
+def found = 'NO_LOGIN_LINK'
+for (int i = 1; i &lt;= count; i++) {
+  def link = vars.get("allLoginPaths_${i}")
+  if (link &amp;&amp; link.contains(myEmail)) { found = link; break }
+}
+vars.put('stubLoginPath', found)
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+            </hashTree>
+
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET stub login link -> /confirm-individual">
+              <stringProp name="HTTPSampler.domain">${stubDomain}</stringProp>
+              <stringProp name="HTTPSampler.port">${stubPort}</stringProp>
+              <stringProp name="HTTPSampler.protocol">${stubProtocol}</stringProp>
+              <stringProp name="HTTPSampler.path">${stubLoginPath}</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+            </hashTree>
+
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /confirm-individual (yes)">
+              <stringProp name="HTTPSampler.path">/confirm-individual</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="csrfToken" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <stringProp name="Argument.name">csrfToken</stringProp>
+                    <stringProp name="Argument.value">${csrfToken}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="confirmIndividual" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <stringProp name="Argument.name">confirmIndividual</stringProp>
+                    <stringProp name="Argument.value">yes</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 on project-name">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If dev (IAT re-establish)">
+              <stringProp name="IfController.condition">${__groovy(vars.get("journeyVariant") == "dev")}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption?ADV_TYPE (re-establish IAT)">
+                <stringProp name="HTTPSampler.path">/exemption?ADV_TYPE=EXE&amp;ARTICLE=17&amp;ACTIVITY_TYPE=DEPOSIT&amp;outcomeType=WO_EXE_AVAILABLE_ARTICLE_17</stringProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                  <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                  <stringProp name="RegexExtractor.match_number">-1</stringProp>
+                </RegexExtractor>
+                <hashTree/>
+                <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                  <stringProp name="scriptLanguage">groovy</stringProp>
+                  <stringProp name="parameters"></stringProp>
+                  <stringProp name="filename"></stringProp>
+                  <stringProp name="cacheKey">true</stringProp>
+                  <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+                </JSR223PostProcessor>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-01 Project Name">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/project-name">
+            <stringProp name="HTTPSampler.path">/exemption/project-name</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="projectName" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">projectName</stringProp>
+                  <stringProp name="Argument.value">${projectName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If perftest (task-list -> site-details intro)">
+          <stringProp name="IfController.condition">${__groovy(vars.get("journeyVariant") == "perftest")}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-01b GET /exemption/site-details (intro)">
+            <boolProp name="TransactionController.parent">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/site-details">
+              <stringProp name="HTTPSampler.path">/exemption/site-details</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-02 Site - coordinatesType=file">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/how-do-you-want-to-provide-the-coordinates">
+            <stringProp name="HTTPSampler.path">/exemption/how-do-you-want-to-provide-the-coordinates</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="coordinatesType" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">coordinatesType</stringProp>
+                  <stringProp name="Argument.value">file</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-03 File type=kml">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/choose-file-type-to-upload">
+            <stringProp name="HTTPSampler.path">/exemption/choose-file-type-to-upload</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="fileUploadType" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">fileUploadType</stringProp>
+                  <stringProp name="Argument.value">kml</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-04 GET upload page (extract uploadUrl)">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/upload-file">
+            <stringProp name="HTTPSampler.path">/exemption/upload-file</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract uploadUrl from form action">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">uploadUrl</stringProp>
+              <stringProp name="RegexExtractor.regex">&lt;form action=&quot;([^&quot;]+)&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_UPLOAD_URL</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-05 Upload KML file">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Upload KML via Apache HttpClient">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import org.apache.jmeter.protocol.http.control.CookieManager
+import org.apache.jmeter.protocol.http.control.Cookie
+
+def domain = vars.get('domain')
+def protocol = vars.get('protocol')
+def port = vars.get('port')
+def uploadPath = vars.get('uploadUrl')
+def kmlPath = vars.get('kmlPath')
+
+if (!uploadPath || uploadPath == 'NO_UPLOAD_URL') {
+    SampleResult.setSuccessful(false)
+    SampleResult.setResponseCode('NO_UPLOAD_URL')
+    SampleResult.setResponseMessage('uploadUrl was not extracted from previous sampler')
+    return
+}
+
+def portSuffix = (port == '443' || port == '80' || !port) ? '' : ":${port}"
+def fullUrl = uploadPath.startsWith('http://') || uploadPath.startsWith('https://')
+    ? uploadPath
+    : "${protocol}://${domain}${portSuffix}${uploadPath}"
+// Local docker: rewrite internal docker hostnames to localhost+host-mapped port
+def uploaderRewrite = props.get('uploaderRewrite') ?: System.getenv('UPLOADER_REWRITE')
+if (uploaderRewrite) {
+    def pair = uploaderRewrite.split('=')
+    if (pair.length == 2) fullUrl = fullUrl.replace(pair[0], pair[1])
+}
+def referer = "${protocol}://${domain}${portSuffix}/exemption/upload-file"
+
+// Pull cookies from the previous sampler's request headers (JMeter's CookieManager stamped them)
+def cookieHeader = ''
+def lastSample = prev
+if (lastSample) {
+    def reqHeaders = lastSample.getRequestHeaders() ?: ''
+    def cookieMatch = (reqHeaders =~ /(?im)^Cookie:\s*([^\r\n]+)/)
+    if (cookieMatch) {
+        cookieHeader = cookieMatch[0][1]
+    }
+}
+
+def fileToUpload = new File(kmlPath)
+if (!fileToUpload.exists()) {
+    SampleResult.setSuccessful(false)
+    SampleResult.setResponseCode('FILE_NOT_FOUND')
+    SampleResult.setResponseMessage("KML file not found: ${kmlPath}")
+    return
+}
+
+List&lt;String&gt; cmd = new ArrayList&lt;&gt;()
+cmd.add('curl'); cmd.add('-s')
+cmd.add('-X'); cmd.add('POST')
+cmd.add('-F'); cmd.add(("file=@" + kmlPath + ";type=application/vnd.google-earth.kml+xml").toString())
+cmd.add('-H'); cmd.add(("Referer: " + referer).toString())
+cmd.add('-H'); cmd.add(("Origin: " + protocol + "://" + domain + portSuffix).toString())
+cmd.add('-A'); cmd.add('Mozilla/5.0 (jmeter-perf-test exemption-file-upload)')
+cmd.add('-w')
+cmd.add('---JMETER_META---%{http_code}|%{url_effective}')
+if (cookieHeader) {
+    cmd.add('-H')
+    cmd.add(("Cookie: " + cookieHeader).toString())
+}
+cmd.add(fullUrl.toString())
+
+SampleResult.sampleStart()
+SampleResult.setURL(new java.net.URL(fullUrl))
+SampleResult.setSentBytes(fileToUpload.length())
+
+try {
+    def proc = new ProcessBuilder(cmd).redirectErrorStream(true).start()
+    def output = proc.inputStream.text
+    def exitCode = proc.waitFor()
+    
+    def metaIdx = output.lastIndexOf('---JMETER_META---')
+    def body = metaIdx &gt;= 0 ? output.substring(0, metaIdx) : output
+    def meta = metaIdx &gt;= 0 ? output.substring(metaIdx + '---JMETER_META---'.length()).trim() : ''
+    def pipeIdx = meta.indexOf('|')
+    def code = pipeIdx &gt;= 0 ? meta.substring(0, pipeIdx).trim() : meta.trim()
+    def finalUrl = pipeIdx &gt;= 0 ? meta.substring(pipeIdx + 1).trim() : fullUrl
+    
+    SampleResult.setResponseCode(code)
+    SampleResult.setResponseMessage(exitCode == 0 ? 'OK' : "curl exit ${exitCode}")
+    SampleResult.setResponseData(body, 'UTF-8')
+    SampleResult.setBodySize((long) body.bytes.length)
+    try { SampleResult.setURL(new java.net.URL(finalUrl)) } catch (Exception ignore) {}
+    SampleResult.setSuccessful(exitCode == 0 &amp;&amp; (code.startsWith('2') || code.startsWith('3')))
+    log.info("CURL_UPLOAD code=${code} exit=${exitCode} final=${finalUrl}")
+} catch (Exception e) {
+    SampleResult.setSuccessful(false)
+    SampleResult.setResponseCode('EXCEPTION')
+    SampleResult.setResponseMessage(e.message)
+    log.warn("CURL_UPLOAD failed: ${e.message}")
+} finally {
+    SampleResult.sampleEnd()
+}
+</stringProp>
+          </JSR223Sampler>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="2xx/3xx">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="0">[23]\d\d</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">1</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-06 Wait for upload processing">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/upload-and-wait (poll 1)">
+            <stringProp name="HTTPSampler.path">/exemption/upload-and-wait</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Check if ready">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def url = prev.getUrlAsString() ?: ''
+def ready = url.contains('/exemption/activity-dates') ||
+            url.contains('/exemption/same-activity-') ||
+            url.contains('/exemption/site-name') ||
+            url.contains('/exemption/review-site-details')
+vars.put('uploadReady', ready ? 'true' : 'false')
+log.info("POLL1 url=${url.take(120)} ready=${ready}")
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="while !uploadReady">
+            <stringProp name="WhileController.condition">${__groovy(vars.get('uploadReady') != 'true' &amp;&amp; (vars.get('pollCount') ?: '0') as int &lt; 15)}</stringProp>
+          </WhileController>
+          <hashTree>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Wait 3s">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/upload-and-wait (poll N)">
+              <stringProp name="HTTPSampler.path">/exemption/upload-and-wait</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <stringProp name="HTTPSampler.response_timeout">15000</stringProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Check ready / increment counter">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def url = prev.getUrlAsString() ?: ''
+def ready = url.contains('/exemption/activity-dates') ||
+            url.contains('/exemption/same-activity-') ||
+            url.contains('/exemption/site-name') ||
+            url.contains('/exemption/review-site-details')
+vars.put('uploadReady', ready ? 'true' : 'false')
+def n = ((vars.get('pollCount') ?: '0') as int) + 1
+vars.put('pollCount', String.valueOf(n))
+def body = prev.getResponseDataAsString() ?: ''
+def csrfMatches = (body =~ /name="csrfToken"[^&gt;]*value="([^"]+)"/).collect{it[1]}
+if (csrfMatches) vars.put('csrfToken', csrfMatches[-1])
+log.info("POLL${n} url=${url.take(120)} ready=${ready}")
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Reset pollCount + assert ready">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">def ready = vars.get('uploadReady') == 'true'
+def polls = vars.get('pollCount') ?: '0'
+SampleResult.setResponseData("uploadReady=${ready} polls=${polls}", 'UTF-8')
+SampleResult.setResponseCode(ready ? '200' : '500')
+SampleResult.setResponseMessage(ready ? 'ready' : 'not ready after polls')
+SampleResult.setSuccessful(ready)
+vars.put('pollCount', '0')
+vars.put('uploadReady', 'false')
+</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+        </hashTree>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-07 Site - activity dates">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/activity-dates">
+            <stringProp name="HTTPSampler.path">/exemption/activity-dates</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-start-date-day" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-start-date-day</stringProp>
+                  <stringProp name="Argument.value">${startDay}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-start-date-month" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-start-date-month</stringProp>
+                  <stringProp name="Argument.value">${startMonth}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-start-date-year" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-start-date-year</stringProp>
+                  <stringProp name="Argument.value">${startYear}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-end-date-day" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-end-date-day</stringProp>
+                  <stringProp name="Argument.value">${endDay}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-end-date-month" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-end-date-month</stringProp>
+                  <stringProp name="Argument.value">${endMonth}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activity-end-date-year" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activity-end-date-year</stringProp>
+                  <stringProp name="Argument.value">${endYear}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-08 Site - activity description">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/activity-description">
+            <stringProp name="HTTPSampler.path">/exemption/activity-description</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="activityDescription" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">activityDescription</stringProp>
+                  <stringProp name="Argument.value">Performance test exempt activity ${runId}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If perftest (review-site-details -> task-list)">
+          <stringProp name="IfController.condition">${__groovy(vars.get("journeyVariant") == "perftest")}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-08b POST /exemption/review-site-details">
+            <boolProp name="TransactionController.parent">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/review-site-details (Continue)">
+              <stringProp name="HTTPSampler.path">/exemption/review-site-details</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="csrfToken" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <stringProp name="Argument.name">csrfToken</stringProp>
+                    <stringProp name="Argument.value">${csrfToken}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-09 Public Register consent">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/sharing-your-project-information-publicly">
+            <stringProp name="HTTPSampler.path">/exemption/sharing-your-project-information-publicly</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST consent=yes">
+            <stringProp name="HTTPSampler.path">/exemption/sharing-your-project-information-publicly</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="consent" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">consent</stringProp>
+                  <stringProp name="Argument.value">yes</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Think">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TX-10 Check answers + submit">
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /exemption/check-your-answers">
+            <stringProp name="HTTPSampler.path">/exemption/check-your-answers</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If perftest (POST cya -> /declaration)">
+            <stringProp name="IfController.condition">${__groovy(vars.get("journeyVariant") == "perftest")}</stringProp>
+            <boolProp name="IfController.evaluateAll">false</boolProp>
+            <boolProp name="IfController.useExpression">true</boolProp>
+          </IfController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /exemption/check-your-answers (redirects to /declaration)">
+              <stringProp name="HTTPSampler.path">/exemption/check-your-answers</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="csrfToken" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <stringProp name="Argument.name">csrfToken</stringProp>
+                    <stringProp name="Argument.value">${csrfToken}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract csrfToken (from /declaration page)">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+                <stringProp name="RegexExtractor.regex">name=&quot;csrfToken&quot;[^&gt;]*value=&quot;([^&quot;]+)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">NO_CSRF</stringProp>
+                <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Pick last csrfToken">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def n = (vars.get('csrfToken_matchNr') ?: '0') as int
+if (n &gt; 0) vars.put('csrfToken', vars.get("csrfToken_${n}"))
+</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 (followed redirect to /declaration)">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /declaration (submit)">
+            <stringProp name="HTTPSampler.path">/declaration</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="csrfToken" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">csrfToken</stringProp>
+                  <stringProp name="Argument.value">${csrfToken}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="confirmation" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.name">confirmation</stringProp>
+                  <stringProp name="Argument.value">confirm</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract applicationReference">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">applicationReference</stringProp>
+              <stringProp name="RegexExtractor.regex">(EXE(?:/|%2F)\d{4}(?:/|%2F)\d{4,6})</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NO_REFERENCE</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 on confirmation">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Has EXE reference">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="0">EXE(/|%2F)\d{4}(/|%2F)\d{4,6}</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+      </hashTree>
+
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success>
+            <label>true</label><code>true</code><message>true</message><threadName>true</threadName>
+            <dataType>true</dataType><encoding>false</encoding><assertions>true</assertions>
+            <subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData>
+            <xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders><responseDataOnError>true</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes>
+            <sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts>
+            <idleTime>true</idleTime><connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">report.csv</stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
