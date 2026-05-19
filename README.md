@@ -107,6 +107,20 @@ After a run JMeter writes:
 - `reports/statistics.json` — machine-readable per-transaction stats
 - `reports/*.csv` — raw sample logs (one per scenario, plus a merged `*-combined.csv` when both scenarios run)
 
+What to look at, in order:
+
+1. **Requests Summary** (pie chart on the landing page) — pass vs fail. Anything less than 100% pass, jump to the Errors panel.
+2. **Statistics table** — one row per transaction. The columns that matter:
+   - `90% Line` / `95% Line` (p90/p95) — best honest "users see this or better" numbers; tune SLAs against p95
+   - `Median` (p50) — typical user experience
+   - `Error %` — should be 0
+   - `Average` and `Max` are easy to read but misleading under load (outliers skew them) — prefer the percentiles
+3. **Charts → Over Time → Response Times Over Time** — should be a flat horizontal line per transaction. Upward drift = backend degrading under sustained load (pool exhaustion, GC, DB queue). Spikes = individual slow requests.
+4. **Charts → Over Time → Active Threads Over Time** — sanity check that VUs ramped to `THREADS` as expected.
+5. **Charts → Throughput → Hits Per Second** — overall req/s. Plateau = system's steady-state ceiling.
+
+**APDEX** on the landing page is a single 0.00–1.00 score (defaults: satisfied <500 ms, tolerating <1500 ms). Our exemption pages legitimately take 2–7s due to backend writes + GOV.UK template rendering, so absolute APDEX will look low — track it **relative to the baseline below**, not against the 1.0 ideal.
+
 Baseline on `perf-test` with 1 VU × 1 iteration per scenario (0 errors):
 
 | Transaction | manual ms | uploadfile ms |
