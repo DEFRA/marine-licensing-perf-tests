@@ -60,14 +60,14 @@ open reports/index.html
 
 ## Run without Docker (local JMeter)
 
-Convenience wrappers:
+Convenience wrappers: to run the test locally 
 
 ```bash
-./run-dev-smoke.sh             # manual scenario, dev
-./run-dev-uploadfile.sh        # uploadfile scenario, dev
-./run-perftest-smoke.sh        # manual scenario, perf-test
-./run-perftest-uploadfile.sh   # uploadfile scenario, perf-test
-./run-perftest-both.sh         # both scenarios, perf-test, merged report
+./run-dev-smoke.sh             # manual scenario, dev, to run tests locally
+./run-dev-uploadfile.sh        # uploadfile scenario, dev, to run tests locally
+./run-perftest-smoke.sh        # manual scenario, perf-test, to run tests locally
+./run-perftest-uploadfile.sh   # uploadfile scenario, perf-test,to run tests locally
+./run-perftest-both.sh         # both scenarios, perf-test, merged report, to run tests locally
 ```
 
 `run-perftest-both.sh` honours `THREADS`, `RAMP_SECONDS`, `LOOPS`, `THINK_MS` env overrides:
